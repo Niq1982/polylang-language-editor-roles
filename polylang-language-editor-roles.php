@@ -48,8 +48,10 @@ function restrict_editing_for_english_editor_role($caps, $cap, $user_id, $args)
 
     $user = get_userdata($user_id);
 
-    if (in_array('administrator', $user->roles)) {
-        return $caps;
+    foreach (apply_filters('polylang_allow_all_language_caps', ['administrator']) as $role) {
+        if (in_array($role, $user->roles)) {
+            return $caps;
+        }
     }
 
     if (in_array($cap, $term_capabilities_to_limit)) {
