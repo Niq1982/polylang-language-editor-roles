@@ -2,7 +2,7 @@
 /*
 Plugin Name: Polylang language editor roles
 Plugin URI: https://github.com/Niq1982/polylang-language-editor-roles
-Description: Users cant edit posts or pages unless they have the editor role for that language
+Description: Restricts users to edit posts, pages, terms etc.unless they have the editor role for that language. Requires a plugin that allows you set multiple roles for user, for example "Multiple Roles".
 Author: Niku Hietanen
 Version: 1.0.0
 Author URI: https://github.com/Niq1982/
@@ -27,13 +27,22 @@ function restrict_editing_for_english_editor_role($caps, $cap, $user_id, $args)
         return $caps;
     }
 
-    $edit_capabilities_to_limit = [
-        'edit_post',
-        'edit_page',
-        'edit_term',
-    ];
+    $post_capabilities_to_limit = apply_filters(
+        'polylang_limit_post_language_caps',
+        [
+            'edit_post',
+            'edit_page',
+        ]
+    );
 
-    if (!in_array($cap, $edit_capabilities_to_limit)) {
+    $term_capabilities_to_limit = apply_filters(
+        'polylang_limit_term_language_caps',
+        [
+            'edit_term',
+        ]
+    );
+
+    if (!in_array($cap, array_merge($post_capabilities_to_limit, $term_capabilities_to_limit))) {
         return $caps;
     }
 
@@ -43,10 +52,10 @@ function restrict_editing_for_english_editor_role($caps, $cap, $user_id, $args)
         return $caps;
     }
 
-    if ($cap === 'edit_term') {
+    if (in_array($cap, $term_capabilities_to_limit)) {
         $term_id = isset($args[0]) ? $args[0] : 0;
         $lang = pll_get_term_language($term_id);
-    } else {
+    } elseif (in_array($cap, $post_capabilities_to_limit)) {
         $post_id = isset($args[0]) ? $args[0] : 0;
         $lang = pll_get_post_language($post_id);
     }
