@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Polylang language editor roles
-Plugin URI: https://niq.kapsi.fi
+Plugin URI: https://github.com/Niq1982/polylang-language-editor-roles
 Description: Users cant edit posts or pages unless they have the editor role for that language
 Author: Niku Hietanen
 Version: 1.0.0
-Author URI: https://niq.kapsi.fi
+Author URI: https://github.com/Niq1982/
 */
 
 namespace PolylangEditorRoles;
